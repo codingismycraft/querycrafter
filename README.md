@@ -31,37 +31,45 @@ To set up QueryCrafter, follow these steps:
 
 2. Install dependencies:
    ```sh
-   pip install -r requirements.txt
+   pip3 install -r requirements.txt
    ```
 
-3. Run the server:
-   ```sh
-   python server.py
-   ```
+3. Activate the virtual environment
+From the root directory of the repo you must create a virtual env and then run
+the server:
+
+    ```sh
+    python3 -m venv qcenv
+    source ./qcenv/bin/activate
+    ```
+
+4. Run the server:
+    ```sh
+    python3 server.py
+    ```
 
 ## Usage
-Once running, QueryCrafter can be accessed to submit coding queries. Send your
-query to the server and receive a crafted response.
+Once running, QueryCrafter can be accessed to post queries. Send your
+query to the server and receive the response from the LLM.
 
-**Example Query:**
-```
-How do I implement a binary search in Python?
+The user can post his query using the following json example:
+
+**Query:**
+```bash
+curl --location 'http://localhost:15959/' \
+--header 'Content-Type: text/plain' \
+--data 'write the doc string for the following function:
+
+def foo():
+    return "test"'
 ```
 
-**Example Response:**
+
+**Response:**
 ```python
-def binary_search(arr, x):
-    low, high = 0, len(arr) - 1
-    while low <= high:
-        mid = (low + high) // 2
-        if arr[mid] < x:
-            low = mid + 1
-        elif arr[mid] > x:
-            high = mid - 1
-        else:
-            return mid
-    return -1
 ```
+
+See for more examples under the tests directory.
 
 ## Configuration
 You can configure the server settings in the `config.py` file to adjust
