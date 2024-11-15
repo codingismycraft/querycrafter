@@ -25,7 +25,7 @@ To set up QueryCrafter, follow these steps:
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/querycrafter.git
+   git clone https://github.com/codingismycraft/querycrafter.git
    cd querycrafter
    ```
 
