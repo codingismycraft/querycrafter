@@ -42,6 +42,13 @@ You must return a json document with the following structure:
  - in the cvars you should add the class level variables. if there are none
  then you should ommit this section altogether.
 
+You will also need to return the number of the spaces that will be needed for
+each line of the docstring. You can just count the number of spaces that are
+prefixing the very first line of code of the passed in function. You must
+return this integer value as a separate key called: prefixed_spaces
+
+If notes are empty you should not return them as a separate key.
+
     {
        'summary': ' The summary of the function less than 80 chars",
        'ivars': [
@@ -58,7 +65,8 @@ You must return a json document with the following structure:
                 'desc': 'short description'
             }
        ],
-       'notes': 'Notes as text'
+       'notes': 'Notes as text',
+       'prefixed_spaces': 4,
     }
 
 You only return the json document and no other text.
@@ -87,6 +95,10 @@ that:
 
     - if the returned notes just repeat the summary just ommit it.
 
+You will also need to return the number of the spaces that will be needed for
+each line of the docstring. You can just count the number of spaces that are
+prefixing the very first line of code of the passed in function. You must
+return this integer value as a separate key called: prefixed_spaces
 
     {
        'summary': ' The summary of the function less than 80 chars",
@@ -104,7 +116,8 @@ that:
        'exceptions: [
             'FileDoesNotExist',
        ],
-       'notes': 'Notes as text'
+       'notes': 'Notes as text',
+       'prefixed_spaces': 4
     }
 
 You only return the json document and no other text.
@@ -113,3 +126,37 @@ Do not enclose the returned json in triple quotes, just return the pure text.
 The function to write the docstring for is the following:
 
 """
+
+
+def convert_func_json_to_doc(doc_as_json):
+    """Converts the passed in dict to a doc string.
+
+    :param dict doc_as_json: The documenation of a function (or method) passed
+    as a dictionary.
+
+    :returns: The doc string that correspods to the passed in dict.
+    :rtype: str
+    """
+    prefixed_spaces = int(doc_as_json.get("prefixed_spaces", "0"))
+    prefix = " " * prefixed_spaces
+    lines = [
+        '"""' + doc_as_json.get("summary", ""),
+        "\n"
+    ]
+    lines.append('\n')
+
+    for argument in doc_as_json.get("arguments", []):
+        arg_name = argument.get("arg_name")
+        arg_type = argument.get("arg_type")
+        desc = argument.get("desc")
+        p = f":param {arg_type} {arg_name}: {desc}"
+        lines.append(p)
+        lines.append('\n')
+        lines.append('\n')
+
+    lines.append('"""')
+    lines.append('\n')
+    docstr = ""
+    for line in lines:
+        docstr += prefix + line
+    return docstr

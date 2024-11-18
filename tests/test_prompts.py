@@ -27,7 +27,7 @@ def test_doc_string_for_class():
     response = chatbot.run_query(prompt)
     retrieved = json.loads(response)
     assert isinstance(retrieved, dict)
-    assert len(retrieved) == 3
+    assert len(retrieved) == 4
     assert "summary" in retrieved
     assert "ivars" in retrieved
     assert "cvars" in retrieved
@@ -51,10 +51,11 @@ def test_doc_string_for_function():
 
     prompt = prompts.MAKE_DOC_STRING_FOR_FUNCTION + txt
     response = chatbot.run_query(prompt)
+    print(response)
     retrieved = json.loads(response)
 
     assert isinstance(retrieved, dict)
-    assert len(retrieved) == 3
+    assert len(retrieved) == 4
     assert "summary" in retrieved
     assert "arguments" in retrieved
     assert "return" in retrieved
@@ -78,12 +79,14 @@ def test_doc_string_for_method_1():
     """
     prompt = prompts.MAKE_DOC_STRING_FOR_FUNCTION + txt
     response = chatbot.run_query(prompt)
+    print(response)
     retrieved = json.loads(response)
 
     assert isinstance(retrieved, dict)
-    assert len(retrieved) == 2
+    assert len(retrieved) == 3
     assert "summary" in retrieved
     assert "arguments" in retrieved
+    assert "prefixed_spaces" in retrieved
 
     args = retrieved.get("arguments")
     assert isinstance(args, list)
@@ -102,7 +105,7 @@ def test_doc_string_for_method_2():
     retrieved = json.loads(response)
 
     assert isinstance(retrieved, dict)
-    assert len(retrieved) == 2
+    assert len(retrieved) == 3
     assert "summary" in retrieved
     assert "return" in retrieved
 
@@ -125,5 +128,25 @@ def test_doc_string_for_method_3():
     retrieved = json.loads(response)
 
     assert isinstance(retrieved, dict)
-    assert len(retrieved) == 1
+    assert len(retrieved) == 2
     assert "summary" in retrieved
+
+
+def test_convert_func_json_to_doc():
+    """Tests the convert_func_json_to_doc."""
+    doc_as_json = {
+        "summary": "Calculate the maximum profit.",
+        "arguments": [
+            {
+                "arg_name": "prices",
+                "arg_type": "list",
+                "desc": "List of stock prices"}],
+        "return": {
+            "return_type": "int",
+            "desc": "Maximum profit possible"},
+        "prefixed_spaces": 4
+    }
+    response = prompts.convert_func_json_to_doc(doc_as_json)
+    print("---------------------")
+    print(response)
+
