@@ -1,24 +1,9 @@
 # QueryCrafter
 
 ## Introduction
-QueryCrafter is your adept companion in crafting precise solutions to coding
-queries. Designed to assist developers by providing accurate and insightful
-answers, QueryCrafter is a powerful tool that enhances the coding experience
-through efficient query processing and expert knowledge delivery.
-
-## Features
-
-- **Instant Query Responses**: Receive quick and accurate answers to your
-  coding questions.
-
-- **Expert Knowledge Base**: Leverage a rich repository of coding information
-  and best practices.
-
-- **User-Friendly Interface**: Easy-to-use server interface designed to
-  streamline the query process.
-
-- **Efficient Processing**: Fast and reliable query handling to support your
-  development workflow.
+QueryCrafter is a chat bot specializing mostly in  coding queries. Designed to
+assist developers serving as thin layer to any of the supported LLMs (like
+llama or gpt).
 
 ## Installation
 To set up QueryCrafter, follow these steps:
@@ -48,6 +33,46 @@ the server:
     python3 server.py
     ```
 
+## Configuration
+You can configure the server settings in the `constants.py` file to adjust
+parameters such as server port and log levels.
+
+In the `constants.py` we are specifying the LLM model to use. This is driven by
+the following list of models:
+
+```
+SUPPORTED_MODELS = [
+    {
+        "provider": "ollama",
+        "model_name": "codellama:7b"
+    },
+    {
+        "provider": "ollama",
+        "model_name": "llama3:8b"
+    },
+    {
+        "provider": "openai",
+        "model_name": "gpt-3.5-turbo"
+    },
+    {
+        "provider": "openai",
+        "model_name": "gpt-4-turbo",
+        "is_active": True
+    },
+]
+```
+
+- The `is_active` key is that sets the LLM model to use. If more that one models
+are active an error will be raised.
+
+- If using an openai model (like in the above example) then you will need to
+  create a hidden file named `.env` under the same directory as the
+  `constants.py` file and there add the `OPENAI_API_KEY` as follows:
+
+  ```
+  OPENAI_API_KEY=<the-key>
+  ```
+
 ## Usage
 Once running, QueryCrafter can be accessed to post queries. Send your
 query to the server and receive the response from the LLM.
@@ -64,32 +89,9 @@ def foo():
     return "test"'
 ```
 
-
 **Response:**
 ```python
 ```
 
 See for more examples under the tests directory.
-
-## Configuration
-You can configure the server settings in the `config.py` file to adjust
-parameters such as server port and log levels.
-
-## Contribution
-We welcome contributions to improve QueryCrafter! Please feel free to submit
-issues or pull requests.
-
-## Future Enhancements
-
-- **Expand Language Support**: Add support for other programming languages
-  beyond Python.
-
-- **Enhanced Natural Language Processing**: Improve the accuracy and
-  understanding of complex queries.
-
-- **Interactive User Interface**: Develop a graphical user interface for a more
-  interactive experience.
-
-## License
-This project is licensed under the GNU GENERAL PUBLIC LICENSE License - see the LICENSE file for details.
 
