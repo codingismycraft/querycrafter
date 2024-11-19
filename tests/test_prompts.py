@@ -1,5 +1,6 @@
 """Tests the prompts and the generated responses."""
 
+# pylint: disable=line-too-long
 import json
 import os
 
@@ -20,7 +21,6 @@ def test_format_line_1():
 def test_format_line_2():
     """Tests the format_line passing less than max max_length."""
     max_length = 80
-    # pylint: disable=line-too-long
     txt = "    :param parent: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec ipsum at lectus malesuada scelerisque. Curabitur euismod vestibulum hendrerit. Duis ultricies velit vel volutpat venenatis. Nulla suscipit magna et malesuada pulvinar. Curabitur semper sit amet lectus non suscipit. Curabitur justo ante, varius eget iaculis quis, laoreet vitae ipsum. Donec malesuada metus nec rutrum posuere. Quisque eget imperdiet est."
     retrieved = prompts.format_line(txt, max_length)
     lines = retrieved.split("\n")
@@ -167,11 +167,12 @@ def test_convert_func_json_to_doc():
             {
                 "arg_name": "prices",
                 "arg_type": "list",
-                "desc": "List of stock prices"}],
+                "desc": "List of stock prices Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec ipsum at lectus malesuada scelerisque. Curabitur euismod vestibulum hendrerit. Duis ultricies velit vel volutpat venenatis. Nulla suscipit magna et malesuada pulvinar. Curabitur semper sit amet lectus non suscipit. Curabitur justo ante, varius eget iaculis quis, laoreet vitae ipsum. Donec malesuada metus nec rutrum posuere. Quisque eget imperdiet est."}],
         "return": {
             "return_type": "int",
-            "desc": "Maximum profit possible"},
-        "prefixed_spaces": 4
+            "desc": "Maximum profit possible Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec ipsum at lectus malesuada scelerisque. Curabitur euismod vestibulum hendrerit. Duis ultricies velit vel volutpat venenatis. Nulla suscipit magna et malesuada pulvinar. Curabitur semper sit amet lectus non suscipit. Curabitur justo ante, varius eget iaculis quis, laoreet vitae ipsum. Donec malesuada metus nec rutrum posuere. Quisque eget imperdiet est. "},
+        "prefixed_spaces": 4,
+        "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec ipsum at lectus malesuada scelerisque. Curabitur euismod vestibulum hendrerit. Duis ultricies velit vel volutpat venenatis. Nulla suscipit magna et malesuada pulvinar. Curabitur semper sit amet lectus non suscipit. Curabitur justo ante, varius eget iaculis quis, laoreet vitae ipsum. Donec malesuada metus nec rutrum posuere. Quisque eget imperdiet est. ",
     }
     response = prompts.convert_func_json_to_doc(doc_as_json)
     print("---------------------")

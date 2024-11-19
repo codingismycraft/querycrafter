@@ -145,14 +145,39 @@ def convert_func_json_to_doc(doc_as_json):
     ]
     lines.append('\n')
 
+    notes = doc_as_json.get("notes")
+
+    if notes:
+        p = format_line(notes, 80)
+        for p1 in p.split('\n'):
+            lines.append(p1)
+            lines.append('\n')
+        lines.append('\n')
+
     for argument in doc_as_json.get("arguments", []):
         arg_name = argument.get("arg_name")
         arg_type = argument.get("arg_type")
         desc = argument.get("desc")
         p = f":param {arg_type} {arg_name}: {desc}"
-        lines.append(p)
+        p = format_line(p, 80)
+
+        for p1 in p.split('\n'):
+            lines.append(p1)
+            lines.append('\n')
         lines.append('\n')
-        lines.append('\n')
+
+    return_info = doc_as_json.get("return")
+
+    if return_info:
+        desc = return_info.get("desc")
+        if desc:
+            p = format_line(f":returns: {desc}", 80)
+            for p1 in p.split('\n'):
+                lines.append(p1)
+                lines.append('\n')
+            return_type = return_info.get("return_type")
+            if return_type:
+                lines.append(f":rtype: {return_type}\n")
 
     lines.append('"""')
     lines.append('\n')
