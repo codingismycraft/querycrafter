@@ -66,6 +66,8 @@ def test_doc_string_for_function():
 
     txt = """
     def get_max_profit(prices):
+        if not prices:
+            raise ValueError
         m = 0
         index = 0
         left = left_side_max_deltas(prices)
@@ -73,6 +75,8 @@ def test_doc_string_for_function():
         while index < len(prices):
             m = max(m, left[index] + right[index])
             index += 1
+        if not m:
+            raise ConnectionError
         return m
     """
 
@@ -82,9 +86,10 @@ def test_doc_string_for_function():
     retrieved = json.loads(response)
 
     assert isinstance(retrieved, dict)
-    assert len(retrieved) == 4
+    assert len(retrieved) == 5
     assert "summary" in retrieved
     assert "arguments" in retrieved
+    assert "exceptions" in retrieved
     assert "return" in retrieved
 
     return_value = retrieved.get("return")
@@ -172,6 +177,10 @@ def test_convert_func_json_to_doc():
             "return_type": "int",
             "desc": "Maximum profit possible Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec ipsum at lectus malesuada scelerisque. Curabitur euismod vestibulum hendrerit. Duis ultricies velit vel volutpat venenatis. Nulla suscipit magna et malesuada pulvinar. Curabitur semper sit amet lectus non suscipit. Curabitur justo ante, varius eget iaculis quis, laoreet vitae ipsum. Donec malesuada metus nec rutrum posuere. Quisque eget imperdiet est. "},
         "prefixed_spaces": 4,
+        "exceptions": [
+            "ValueError",
+            "ConnectionError"
+        ],
         "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec ipsum at lectus malesuada scelerisque. Curabitur euismod vestibulum hendrerit. Duis ultricies velit vel volutpat venenatis. Nulla suscipit magna et malesuada pulvinar. Curabitur semper sit amet lectus non suscipit. Curabitur justo ante, varius eget iaculis quis, laoreet vitae ipsum. Donec malesuada metus nec rutrum posuere. Quisque eget imperdiet est. ",
     }
     response = prompts.convert_func_json_to_doc(doc_as_json)

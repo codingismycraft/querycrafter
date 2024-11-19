@@ -179,6 +179,14 @@ def convert_func_json_to_doc(doc_as_json):
             if return_type:
                 lines.append(f":rtype: {return_type}\n")
 
+    exceptions = doc_as_json.get("exceptions")
+
+    if exceptions:
+        lines.append('\n')
+        for ex in exceptions:
+            lines.append(f":raises: {ex}")
+            lines.append('\n')
+
     lines.append('"""')
     lines.append('\n')
     docstr = ""
