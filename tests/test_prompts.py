@@ -82,7 +82,6 @@ def test_doc_string_for_function():
 
     prompt = prompts.MAKE_DOC_STRING_FOR_FUNCTION + txt
     response = chatbot.run_query(prompt)
-    print(response)
     retrieved = json.loads(response)
 
     assert isinstance(retrieved, dict)
@@ -111,7 +110,6 @@ def test_doc_string_for_method_1():
     """
     prompt = prompts.MAKE_DOC_STRING_FOR_FUNCTION + txt
     response = chatbot.run_query(prompt)
-    print(response)
     retrieved = json.loads(response)
 
     assert isinstance(retrieved, dict)
@@ -184,5 +182,6 @@ def test_convert_func_json_to_doc():
         "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec ipsum at lectus malesuada scelerisque. Curabitur euismod vestibulum hendrerit. Duis ultricies velit vel volutpat venenatis. Nulla suscipit magna et malesuada pulvinar. Curabitur semper sit amet lectus non suscipit. Curabitur justo ante, varius eget iaculis quis, laoreet vitae ipsum. Donec malesuada metus nec rutrum posuere. Quisque eget imperdiet est. ",
     }
     response = prompts.convert_func_json_to_doc(doc_as_json)
-    print("---------------------")
-    print(response)
+    for line in response.split("\n"):
+        if line:
+            assert line.startswith("    ")
