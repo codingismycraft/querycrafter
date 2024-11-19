@@ -160,3 +160,41 @@ def convert_func_json_to_doc(doc_as_json):
     for line in lines:
         docstr += prefix + line
     return docstr
+
+
+def format_line(line, max_length):
+    """Formats the line of text to fit within a specified maximum length.
+
+    If the passed in line exceeds the max length this function is breaking it
+    down to multiple lines each of them having the same number of leading
+    spaces as the first line while been less that the max length.
+
+    Used to format strings in a doc string and fit them properly.
+
+    :param str line: The line of text to be formatted.
+    :param int max_length: The maximum allowed length of the formatted line.
+
+    :returns: The formatted line, potentially wrapped to multiple lines if necessary.
+    :rtype: str
+    """
+    line = line.rstrip()
+    if len(line) < max_length:
+        return line
+
+    counter = 0
+    for c in line:
+        if c == ' ':
+            counter += 1
+        else:
+            break
+    leading_spaces = ' ' * counter
+
+    index = max_length - 1
+    while index >= 0:
+        if line[index] == ' ':
+            break
+        index -= 1
+
+    return line[:index] + "\n" + format_line(
+        leading_spaces + line[index:].lstrip(), max_length
+    )
