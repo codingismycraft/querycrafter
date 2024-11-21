@@ -29,6 +29,10 @@ class ModelManager:
             "model_name": "llama3:8b",
         },
         {
+            "provider": "ollama",
+            "model_name": "llama3:2",
+        },
+        {
             "provider": "openai",
             "model_name": "gpt-3.5-turbo"
         },
