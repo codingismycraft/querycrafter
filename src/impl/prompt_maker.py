@@ -1,6 +1,31 @@
-"""Defines promts to be used on demand."""
+"""Provides promts to be used on demand.
 
-MAKE_DOC_STRING_FOR_CLASS = """
+A prompt is meant to be assosiated a DocType enumerator and the make_prompt
+function is used to build it based on the text that is passed from the client.
+"""
+
+import querycrafter.src.impl.common as common
+
+
+def make_prompt(doc_type, source_code):
+    """Makes the prompt to use to create a docstr.
+
+    :param DocType doc_type: The doctype to write the documenation for.
+    :param str source_code: The source_code to use for the docstr.
+
+    :returns: The prompt for the passed in source code.
+    :rtype: str
+
+    :raises: ValueError.
+    """
+    if doc_type == common.DocType.FUNCTION:
+        return _DOC_STRING_FOR_FUNCTION + source_code
+    elif doc_type == common.DocType.CLASS:
+        return _DOC_STRING_FOR_CLASS + source_code
+    raise ValueError(f"DocType: {str(doc_type)} is not supported.")
+
+
+_DOC_STRING_FOR_CLASS = """
 You are a python programmer who is writting the docstring for a class.
 
 You must return ONLY the docstring including the spaces and the triplle code
@@ -53,14 +78,14 @@ If notes are empty you should not return them as a separate key.
        'summary': ' The summary of the function less than 80 chars",
        'ivars': [
             {
-                'arg_name1': 'name',
+                'arg_name': 'name',
                 'arg_type': 'str',
                 'desc': 'short description'
             }
        ],
        'cvars': [
             {
-                'arg_name2': 'name',
+                'arg_name': 'name',
                 'arg_type': 'str',
                 'desc': 'short description'
             }
@@ -78,7 +103,7 @@ The class to write the docstring for is the following:
 """
 
 
-MAKE_DOC_STRING_FOR_FUNCTION = """
+_DOC_STRING_FOR_FUNCTION = """
 You are a python programmer who is writting the docstring for a function
 or a method.
 
@@ -104,7 +129,7 @@ return this integer value as a separate key called: prefixed_spaces
        'summary': ' The summary of the function less than 80 chars",
        'arguments': [
             {
-                'arg_name1': 'name',
+                'arg_name': 'name',
                 'arg_type': 'str',
                 'desc': 'short description'
             }
@@ -126,108 +151,3 @@ Do not enclose the returned json in triple quotes, just return the pure text.
 The function to write the docstring for is the following:
 
 """
-
-
-def convert_func_json_to_doc(doc_as_json):
-    """Converts the passed in dict to a doc string.
-
-    :param dict doc_as_json: The documenation of a function (or method) passed
-    as a dictionary.
-
-    :returns: The doc string that correspods to the passed in dict.
-    :rtype: str
-    """
-    prefixed_spaces = int(doc_as_json.get("prefixed_spaces", "0"))
-    prefix = " " * prefixed_spaces
-    lines = [
-        '"""' + doc_as_json.get("summary", ""),
-        "\n"
-    ]
-    lines.append('\n')
-
-    notes = doc_as_json.get("notes")
-
-    if notes:
-        p = format_line(notes, 80)
-        for p1 in p.split('\n'):
-            lines.append(p1)
-            lines.append('\n')
-        lines.append('\n')
-
-    for argument in doc_as_json.get("arguments", []):
-        arg_name = argument.get("arg_name")
-        arg_type = argument.get("arg_type")
-        desc = argument.get("desc")
-        p = f":param {arg_type} {arg_name}: {desc}"
-        p = format_line(p, 80)
-
-        for p1 in p.split('\n'):
-            lines.append(p1)
-            lines.append('\n')
-        lines.append('\n')
-
-    return_info = doc_as_json.get("return")
-
-    if return_info:
-        desc = return_info.get("desc")
-        if desc:
-            p = format_line(f":returns: {desc}", 80)
-            for p1 in p.split('\n'):
-                lines.append(p1)
-                lines.append('\n')
-            return_type = return_info.get("return_type")
-            if return_type:
-                lines.append(f":rtype: {return_type}\n")
-
-    exceptions = doc_as_json.get("exceptions")
-
-    if exceptions:
-        lines.append('\n')
-        for ex in exceptions:
-            lines.append(f":raises: {ex}")
-            lines.append('\n')
-
-    lines.append('"""')
-    lines.append('\n')
-    docstr = ""
-    for line in lines:
-        docstr += prefix + line
-    return docstr
-
-
-def format_line(line, max_length):
-    """Formats the line of text to fit within a specified maximum length.
-
-    If the passed in line exceeds the max length this function is breaking it
-    down to multiple lines each of them having the same number of leading
-    spaces as the first line while been less that the max length.
-
-    Used to format strings in a doc string and fit them properly.
-
-    :param str line: The line of text to be formatted.
-    :param int max_length: The maximum allowed length of the formatted line.
-
-    :returns: The formatted line, potentially wrapped to multiple lines if necessary.
-    :rtype: str
-    """
-    line = line.rstrip()
-    if len(line) < max_length:
-        return line
-
-    counter = 0
-    for c in line:
-        if c == ' ':
-            counter += 1
-        else:
-            break
-    leading_spaces = ' ' * counter
-
-    index = max_length - 1
-    while index >= 0:
-        if line[index] == ' ':
-            break
-        index -= 1
-
-    return line[:index] + "\n" + format_line(
-        leading_spaces + line[index:].lstrip(), max_length
-    )
