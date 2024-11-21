@@ -2,8 +2,8 @@
 
 import flask
 
-import querycrafter.constants as constants
-import querycrafter.chatbot as chatbot
+import querycrafter.src.common as common
+import querycrafter.src.chatbot as chatbot
 
 app = flask.Flask(__name__)
 
@@ -17,5 +17,5 @@ def query_executor():
 
 
 if __name__ == '__main__':
-    constants.load_secrets()
-    app.run(port=constants.LISTENING_PORT, host="0.0.0.0")
+    common.load_secrets()
+    app.run(port=common.LISTENING_PORT, host="0.0.0.0")
