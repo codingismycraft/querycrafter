@@ -23,7 +23,8 @@ def query_executor():
     Expected JSON format:
     {
         "document_type": "CLASS",
-        "text": "class Person: pass"
+        "text": "class Person: pass",
+        "max_line_length": 120 (optional)
     }
 
     The document type field must much the enumerated values in DocType.
@@ -34,7 +35,8 @@ def query_executor():
         data = flask.request.json
         doctype = DocType(data.get('document_type'))
         text = data.get('text')
-        response = facade.make_docstring(doctype, text)
+        max_line_length = data.get("max_line_length")
+        response = facade.make_docstring(doctype, text, max_line_length)
         return flask.Response(response, mimetype='text/plain')
     except Exception as e:
         return f"An error occurred: {str(e)}", 400
