@@ -1,5 +1,7 @@
 """Defines promts to be used on demand."""
 
+import querycrafter.linespliter as linespliter
+
 MAKE_DOC_STRING_FOR_CLASS = """
 You are a python programmer who is writting the docstring for a class.
 
@@ -53,14 +55,14 @@ If notes are empty you should not return them as a separate key.
        'summary': ' The summary of the function less than 80 chars",
        'ivars': [
             {
-                'arg_name1': 'name',
+                'arg_name': 'name',
                 'arg_type': 'str',
                 'desc': 'short description'
             }
        ],
        'cvars': [
             {
-                'arg_name2': 'name',
+                'arg_name': 'name',
                 'arg_type': 'str',
                 'desc': 'short description'
             }
@@ -104,7 +106,7 @@ return this integer value as a separate key called: prefixed_spaces
        'summary': ' The summary of the function less than 80 chars",
        'arguments': [
             {
-                'arg_name1': 'name',
+                'arg_name': 'name',
                 'arg_type': 'str',
                 'desc': 'short description'
             }
@@ -128,10 +130,12 @@ The function to write the docstring for is the following:
 """
 
 
-def convert_func_json_to_doc(doc_as_json):
-    """Converts the passed in dict to a doc string.
+def convert_class_json_to_doc(doc_as_json):
+    """Converts the passed in dict for the class to a doc string.
 
-    :param dict doc_as_json: The documenation of a function (or method) passed
+    Applies to class level docstr.
+
+    :param dict doc_as_json: The class level documentation details passed
     as a dictionary.
 
     :returns: The doc string that correspods to the passed in dict.
@@ -144,49 +148,39 @@ def convert_func_json_to_doc(doc_as_json):
         "\n"
     ]
     lines.append('\n')
-
     notes = doc_as_json.get("notes")
 
+    max_length = 80 - prefixed_spaces
+
     if notes:
-        p = format_line(notes, 80)
+        p = linespliter.split_line(notes, max_length)
         for p1 in p.split('\n'):
             lines.append(p1)
             lines.append('\n')
         lines.append('\n')
 
-    for argument in doc_as_json.get("arguments", []):
-        arg_name = argument.get("arg_name")
-        arg_type = argument.get("arg_type")
-        desc = argument.get("desc")
-        p = f":param {arg_type} {arg_name}: {desc}"
-        p = format_line(p, 80)
-
+    ivars = doc_as_json.get("ivars", [])
+    for var_info in ivars:
+        arg_name = var_info.get("arg_name")
+        arg_type = var_info.get("arg_type")
+        desc = var_info.get("desc")
+        p = f":ivar {arg_type} {arg_name}: {desc}"
+        p = linespliter.split_line(p,  max_length)
         for p1 in p.split('\n'):
             lines.append(p1)
             lines.append('\n')
         lines.append('\n')
 
-    return_info = doc_as_json.get("return")
-
-    if return_info:
-        desc = return_info.get("desc")
-        if desc:
-            p = format_line(f":returns: {desc}", 80)
-            for p1 in p.split('\n'):
-                lines.append(p1)
-                lines.append('\n')
-            return_type = return_info.get("return_type")
-            if return_type:
-                lines.append(f":rtype: {return_type}\n")
-
-    exceptions = doc_as_json.get("exceptions")
-
-    if exceptions:
-        lines.append('\n')
-        for ex in exceptions:
-            lines.append(f":raises: {ex}")
+    cvars = doc_as_json.get("cvars", [])
+    for var_info in cvars:
+        arg_name = var_info.get("arg_name")
+        arg_type = var_info.get("arg_type")
+        desc = var_info.get("desc")
+        p = f":cvar {arg_type} {arg_name}: {desc}"
+        p = linespliter.split_line(p, max_length)
+        for p1 in p.split('\n'):
+            lines.append(p1)
             lines.append('\n')
-
     lines.append('"""')
     lines.append('\n')
     docstr = ""
@@ -195,39 +189,60 @@ def convert_func_json_to_doc(doc_as_json):
     return docstr
 
 
-def format_line(line, max_length):
-    """Formats the line of text to fit within a specified maximum length.
+def convert_func_json_to_doc(doc_as_json):
+    """Converts the passed in dict to a doc string.
 
-    If the passed in line exceeds the max length this function is breaking it
-    down to multiple lines each of them having the same number of leading
-    spaces as the first line while been less that the max length.
+    :param dict doc_as_json: The documenation of a function (or method) passed
+    as a dictionary.
 
-    Used to format strings in a doc string and fit them properly.
-
-    :param str line: The line of text to be formatted.
-    :param int max_length: The maximum allowed length of the formatted line.
-
-    :returns: The formatted line, potentially wrapped to multiple lines if necessary.
+    :returns: The doc string that correspods to the passed in dict.
     :rtype: str
     """
-    line = line.rstrip()
-    if len(line) < max_length:
-        return line
+    prefixed_spaces = int(doc_as_json.get("prefixed_spaces", "0"))
+    max_length = 80 - prefixed_spaces
+    prefix = " " * prefixed_spaces
+    lines = [
+        '"""' + doc_as_json.get("summary", ""),
+        "\n"
+    ]
 
-    counter = 0
-    for c in line:
-        if c == ' ':
-            counter += 1
-        else:
-            break
-    leading_spaces = ' ' * counter
+    # Add the notes section.
+    notes = doc_as_json.get("notes")
+    if notes:
+        lines.extend(linespliter.split_line(notes, max_length))
+        lines.append('\n')
 
-    index = max_length - 1
-    while index >= 0:
-        if line[index] == ' ':
-            break
-        index -= 1
+    # Add the arguments section.
+    for argument in doc_as_json.get("arguments", []):
+        arg_name = argument.get("arg_name")
+        arg_type = argument.get("arg_type")
+        desc = argument.get("desc")
+        p = f":param {arg_type} {arg_name}: {desc}"
+        lines.extend(linespliter.split_line(p, max_length))
+        lines.append('\n')
 
-    return line[:index] + "\n" + format_line(
-        leading_spaces + line[index:].lstrip(), max_length
-    )
+    # Add the return section.
+    return_info = doc_as_json.get("return")
+    if return_info:
+        desc = return_info.get("desc")
+        if desc:
+            p = linespliter.split_line(f":returns: {desc}", max_length)
+            lines.extend(p)
+
+            return_type = return_info.get("return_type")
+            if return_type:
+                lines.append(f":rtype: {return_type}")
+        lines.append('\n')
+
+    exceptions = doc_as_json.get("exceptions")
+
+    if exceptions:
+        for ex in exceptions:
+            lines.append('\n')
+            lines.append(f":raises: {ex}")
+    lines.append('"""')
+    lines.append('\n')
+    docstr = ""
+    for line in lines:
+        docstr += prefix + line.strip() + '\n'
+    return docstr
