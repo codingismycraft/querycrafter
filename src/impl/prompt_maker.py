@@ -1,7 +1,10 @@
-"""Defines promts to be used on demand."""
+"""Provides promts to be used on demand.
+
+A prompt is meant to be assosiated a DocType enumerator and the make_prompt
+function is used to build it based on the text that is passed from the client.
+"""
 
 import querycrafter.src.impl.common as common
-import querycrafter.src.impl.linespliter as linespliter
 
 
 def make_prompt(doc_type, source_code):
@@ -15,9 +18,9 @@ def make_prompt(doc_type, source_code):
 
     :raises: ValueError.
     """
-    if doc_type == common.DocType.FUNCTION_DOC_STR:
+    if doc_type == common.DocType.FUNCTION:
         return _DOC_STRING_FOR_FUNCTION + source_code
-    elif doc_type == common.DocType.CLASS_DOC_STR:
+    elif doc_type == common.DocType.CLASS:
         return _DOC_STRING_FOR_CLASS + source_code
     raise ValueError(f"DocType: {str(doc_type)} is not supported.")
 
