@@ -1,7 +1,7 @@
 """Tests the doc_writer module."""
 
 
-import querycrafter.src.doc_writer as doc_writer
+import querycrafter.src.impl.doc_writer as doc_writer
 
 
 """Tests the prompts and the generated responses."""
@@ -11,9 +11,9 @@ import json
 import os
 
 
-import querycrafter.chatbot as chatbot
-import querycrafter.constants as constants
-import querycrafter.prompts as prompts
+import querycrafter.src.impl.chatbot as chatbot
+import querycrafter.src.impl.common as common
+import querycrafter.src.impl.prompts as prompts
 
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 

@@ -2,8 +2,8 @@
 
 import flask
 
-import querycrafter.src.common as common
-import querycrafter.src.chatbot as chatbot
+import querycrafter.src.impl.common as common
+import querycrafter.src.impl.chatbot as chatbot
 
 app = flask.Flask(__name__)
 

@@ -6,8 +6,8 @@ import unittest
 import openai
 
 
-import querycrafter.src.chatbot as chatbot
-import querycrafter.src.common as common
+import querycrafter.src.impl.chatbot as chatbot
+import querycrafter.src.impl.common as common
 
 # pylint: disable=protected-access
 _OpenAIChatBot = chatbot._OpenAIChatBot

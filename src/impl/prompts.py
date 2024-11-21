@@ -1,6 +1,6 @@
 """Defines promts to be used on demand."""
 
-import querycrafter.linespliter as linespliter
+import querycrafter.src.impl.linespliter as linespliter
 
 MAKE_DOC_STRING_FOR_CLASS = """
 You are a python programmer who is writting the docstring for a class.

@@ -5,9 +5,9 @@ import json
 import os
 
 
-import querycrafter.src.chatbot as chatbot
-import querycrafter.src.common as common
-import querycrafter.src.prompts as prompts
+import querycrafter.src.impl.chatbot as chatbot
+import querycrafter.src.impl.common as common
+import querycrafter.src.impl.prompts as prompts
 
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 

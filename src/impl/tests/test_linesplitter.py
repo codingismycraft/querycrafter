@@ -1,6 +1,6 @@
 """Tests the linesplitter module."""
 
-import querycrafter.linespliter as linespliter
+import querycrafter.src.impl.linespliter as linespliter
 
 
 def test_split_line_1():

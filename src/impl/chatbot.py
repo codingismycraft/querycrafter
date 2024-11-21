@@ -3,7 +3,7 @@
 import ollama
 import openai
 
-import querycrafter.src.model_manager as model_manager
+import querycrafter.src.impl.model_manager as model_manager
 
 ModelManager = model_manager.ModelManager
 
