@@ -5,16 +5,16 @@ import json
 import os
 
 
-import querycrafter.chatbot as chatbot
-import querycrafter.constants as constants
-import querycrafter.prompts as prompts
+import querycrafter.src.chatbot as chatbot
+import querycrafter.src.common as common
+import querycrafter.src.prompts as prompts
 
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 def test_doc_string_for_class():
     """Tests creating doc string for a class."""
-    constants.load_secrets()
+    common.load_secrets()
     txt = """
     class Person:
         name: None
@@ -38,7 +38,7 @@ def test_doc_string_for_class():
 
 def test_doc_string_for_function():
     """Tests creating doc string for a function."""
-    constants.load_secrets()
+    common.load_secrets()
 
     txt = """
     def get_max_profit(prices):
@@ -76,7 +76,7 @@ def test_doc_string_for_function():
 
 def test_doc_string_for_method_1():
     """Tests creating doc string for a class method."""
-    constants.load_secrets()
+    common.load_secrets()
     txt = """
     def say_hello(self, crowd, time):
         if is_morning(time):
@@ -101,7 +101,7 @@ def test_doc_string_for_method_1():
 
 def test_doc_string_for_method_2():
     """Tests creating doc string for a class method no args."""
-    constants.load_secrets()
+    common.load_secrets()
     txt = """
     def say_hello(self):
         return "OK"
@@ -124,7 +124,7 @@ def test_doc_string_for_method_2():
 
 def test_doc_string_for_method_3():
     """Tests creating doc string for a class method no args."""
-    constants.load_secrets()
+    common.load_secrets()
     txt = """
     def say_hello(self):
         pass
