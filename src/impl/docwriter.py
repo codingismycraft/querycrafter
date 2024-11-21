@@ -75,13 +75,14 @@ def _json_to_class_docstr(doc_as_json, max_line_length):
 
     # Add the instance level variables.
     ivars = doc_as_json.get("ivars", [])
-    for var_info in ivars:
+    for index, var_info in enumerate(ivars):
         arg_name = var_info.get("arg_name")
         arg_type = var_info.get("arg_type")
         desc = var_info.get("desc")
         p = f":ivar {arg_type} {arg_name}: {desc}"
+        if index > 0:
+            lines.append('\n')
         lines.extend(linespliter.split_line(p, effective_length))
-        lines.append('\n')
 
     # Add the class level variables.
     cvars = doc_as_json.get("cvars", [])
@@ -90,8 +91,8 @@ def _json_to_class_docstr(doc_as_json, max_line_length):
         arg_type = var_info.get("arg_type")
         desc = var_info.get("desc")
         p = f":cvar {arg_type} {arg_name}: {desc}"
-        lines.extend(linespliter.split_line(p, effective_length))
         lines.append('\n')
+        lines.extend(linespliter.split_line(p, effective_length))
 
     # Add the closing quotes.
     lines.append('"""')
@@ -148,7 +149,6 @@ def _json_to_function_docstr(doc_as_json, max_line_length):
             return_type = return_info.get("return_type")
             if return_type:
                 lines.append(f":rtype: {return_type}")
-        lines.append('\n')
 
     exceptions = doc_as_json.get("exceptions")
 

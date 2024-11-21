@@ -40,5 +40,5 @@ def clear_secrets():
 class DocType(enum.Enum):
     """Defines the supported docstring types."""
 
-    FUNCTION = 1
-    CLASS = 2
+    FUNCTION = "FUNCTION"
+    CLASS = "CLASS"
