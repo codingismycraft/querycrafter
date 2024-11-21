@@ -3,7 +3,9 @@
 import ollama
 import openai
 
-import querycrafter.constants as constants
+import querycrafter.src.model_manager as model_manager
+
+ModelManager = model_manager.ModelManager
 
 
 def run_query(query):
@@ -32,16 +34,8 @@ class _ChatBotWrapper:
 
         :raises: ValueError
         """
-        provider = None
-        model_name = None
-        for mi in constants.SUPPORTED_MODELS:
-            if mi.get("is_active"):
-                if provider or model_name:
-                    raise ValueError("Cannot define multiple active models.")
-                provider = mi["provider"]
-                model_name = mi["model_name"]
-        if not model_name or not provider:
-            raise ValueError("You must select an active model in constants.")
+        provider = ModelManager.get_provider()
+        model_name = ModelManager.get_model_name()
 
         if provider == "ollama""":
             cls._chat_bot = _OllamaChatBot(model_name)
