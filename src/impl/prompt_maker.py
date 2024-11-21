@@ -1,8 +1,28 @@
 """Defines promts to be used on demand."""
 
+import querycrafter.src.impl.common as common
 import querycrafter.src.impl.linespliter as linespliter
 
-MAKE_DOC_STRING_FOR_CLASS = """
+
+def make_prompt(doc_type, source_code):
+    """Makes the prompt to use to create a docstr.
+
+    :param DocType doc_type: The doctype to write the documenation for.
+    :param str source_code: The source_code to use for the docstr.
+
+    :returns: The prompt for the passed in source code.
+    :rtype: str
+
+    :raises: ValueError.
+    """
+    if doc_type == common.DocType.FUNCTION_DOC_STR:
+        return _DOC_STRING_FOR_FUNCTION + source_code
+    elif doc_type == common.DocType.CLASS_DOC_STR:
+        return _DOC_STRING_FOR_CLASS + source_code
+    raise ValueError(f"DocType: {str(doc_type)} is not supported.")
+
+
+_DOC_STRING_FOR_CLASS = """
 You are a python programmer who is writting the docstring for a class.
 
 You must return ONLY the docstring including the spaces and the triplle code
@@ -80,7 +100,7 @@ The class to write the docstring for is the following:
 """
 
 
-MAKE_DOC_STRING_FOR_FUNCTION = """
+_DOC_STRING_FOR_FUNCTION = """
 You are a python programmer who is writting the docstring for a function
 or a method.
 
@@ -128,121 +148,3 @@ Do not enclose the returned json in triple quotes, just return the pure text.
 The function to write the docstring for is the following:
 
 """
-
-
-def convert_class_json_to_doc(doc_as_json):
-    """Converts the passed in dict for the class to a doc string.
-
-    Applies to class level docstr.
-
-    :param dict doc_as_json: The class level documentation details passed
-    as a dictionary.
-
-    :returns: The doc string that correspods to the passed in dict.
-    :rtype: str
-    """
-    prefixed_spaces = int(doc_as_json.get("prefixed_spaces", "0"))
-    prefix = " " * prefixed_spaces
-    lines = [
-        '"""' + doc_as_json.get("summary", ""),
-        "\n"
-    ]
-    lines.append('\n')
-    notes = doc_as_json.get("notes")
-
-    max_length = 80 - prefixed_spaces
-
-    if notes:
-        p = linespliter.split_line(notes, max_length)
-        for p1 in p.split('\n'):
-            lines.append(p1)
-            lines.append('\n')
-        lines.append('\n')
-
-    ivars = doc_as_json.get("ivars", [])
-    for var_info in ivars:
-        arg_name = var_info.get("arg_name")
-        arg_type = var_info.get("arg_type")
-        desc = var_info.get("desc")
-        p = f":ivar {arg_type} {arg_name}: {desc}"
-        p = linespliter.split_line(p,  max_length)
-        for p1 in p.split('\n'):
-            lines.append(p1)
-            lines.append('\n')
-        lines.append('\n')
-
-    cvars = doc_as_json.get("cvars", [])
-    for var_info in cvars:
-        arg_name = var_info.get("arg_name")
-        arg_type = var_info.get("arg_type")
-        desc = var_info.get("desc")
-        p = f":cvar {arg_type} {arg_name}: {desc}"
-        p = linespliter.split_line(p, max_length)
-        for p1 in p.split('\n'):
-            lines.append(p1)
-            lines.append('\n')
-    lines.append('"""')
-    lines.append('\n')
-    docstr = ""
-    for line in lines:
-        docstr += prefix + line
-    return docstr
-
-
-def convert_func_json_to_doc(doc_as_json):
-    """Converts the passed in dict to a doc string.
-
-    :param dict doc_as_json: The documenation of a function (or method) passed
-    as a dictionary.
-
-    :returns: The doc string that correspods to the passed in dict.
-    :rtype: str
-    """
-    prefixed_spaces = int(doc_as_json.get("prefixed_spaces", "0"))
-    max_length = 80 - prefixed_spaces
-    prefix = " " * prefixed_spaces
-    lines = [
-        '"""' + doc_as_json.get("summary", ""),
-        "\n"
-    ]
-
-    # Add the notes section.
-    notes = doc_as_json.get("notes")
-    if notes:
-        lines.extend(linespliter.split_line(notes, max_length))
-        lines.append('\n')
-
-    # Add the arguments section.
-    for argument in doc_as_json.get("arguments", []):
-        arg_name = argument.get("arg_name")
-        arg_type = argument.get("arg_type")
-        desc = argument.get("desc")
-        p = f":param {arg_type} {arg_name}: {desc}"
-        lines.extend(linespliter.split_line(p, max_length))
-        lines.append('\n')
-
-    # Add the return section.
-    return_info = doc_as_json.get("return")
-    if return_info:
-        desc = return_info.get("desc")
-        if desc:
-            p = linespliter.split_line(f":returns: {desc}", max_length)
-            lines.extend(p)
-
-            return_type = return_info.get("return_type")
-            if return_type:
-                lines.append(f":rtype: {return_type}")
-        lines.append('\n')
-
-    exceptions = doc_as_json.get("exceptions")
-
-    if exceptions:
-        for ex in exceptions:
-            lines.append('\n')
-            lines.append(f":raises: {ex}")
-    lines.append('"""')
-    lines.append('\n')
-    docstr = ""
-    for line in lines:
-        docstr += prefix + line.strip() + '\n'
-    return docstr

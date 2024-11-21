@@ -1,5 +1,6 @@
 """Defines the service wide constants."""
 
+import enum
 import os
 
 LISTENING_PORT = 15959
@@ -34,3 +35,10 @@ def clear_secrets():
             name, _ = line.split("=")
             if name in os.environ:
                 del os.environ[name]
+
+
+class DocType(enum.Enum):
+    """Defines the supported docstring types."""
+
+    FUNCTION = 1
+    CLASS = 2
