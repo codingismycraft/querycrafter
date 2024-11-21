@@ -4,6 +4,7 @@
 import json
 import os
 
+import pytest
 
 import querycrafter.src.impl.chatbot as chatbot
 import querycrafter.src.impl.common as common
@@ -12,6 +13,12 @@ import querycrafter.src.impl.prompt_maker as prompt_maker
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 DocType = common.DocType
+
+
+def test_using_unsupported_model():
+    """Tests the prompt maker using invalid doctype."""
+    with pytest.raises(ValueError):
+        prompt_maker.make_prompt(None, "")
 
 
 def test_doc_string_for_class():
