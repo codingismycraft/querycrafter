@@ -53,8 +53,7 @@ class ModelManager:
         for model_info in cls._SUPPORTED_MODELS:
             if model_info["model_name"] == model_name:
                 provider = model_info.get("provider")
-                if not provider:
-                    raise ValueError(f"Invalid provider for {model_name}")
+                assert provider, "Missing provider name."
                 cls._model_name = model_name
                 cls._provider = provider
                 return
