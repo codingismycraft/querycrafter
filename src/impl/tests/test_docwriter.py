@@ -37,8 +37,6 @@ def test_convert_func_json_to_doc():
         "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec ipsum at lectus malesuada scelerisque. Curabitur euismod vestibulum hendrerit. Duis ultricies velit vel volutpat venenatis. Nulla suscipit magna et malesuada pulvinar. Curabitur semper sit amet lectus non suscipit. Curabitur justo ante, varius eget iaculis quis, laoreet vitae ipsum. Donec malesuada metus nec rutrum posuere. Quisque eget imperdiet est. ",
     }
     response = docwriter.make(DocType.FUNCTION, doc_as_json)
-
-    print(response)
     for line in response.split("\n"):
         if line:
             assert line.startswith(' ' * prefixed_spaces)
@@ -62,7 +60,6 @@ def test_convert_class_json_to_doc():
                    "prefixed_spaces": prefixed_spaces}
 
     response = docwriter.make(DocType.CLASS, doc_as_json)
-    print(response)
     for line in response.split("\n"):
         if line:
             assert line.startswith(' ' * prefixed_spaces)
