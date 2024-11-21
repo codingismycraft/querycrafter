@@ -1,22 +1,12 @@
 """Tests the doc_writer module."""
 
 
-import querycrafter.src.impl.doc_writer as doc_writer
-
-
-"""Tests the prompts and the generated responses."""
+import querycrafter.src.impl.common as common
+import querycrafter.src.impl.docwriter as docwriter
 
 # pylint: disable=line-too-long
-import json
-import os
 
-
-import querycrafter.src.impl.chatbot as chatbot
-import querycrafter.src.impl.common as common
-import querycrafter.src.impl.prompts as prompts
-
-_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-
+DocType = common.DocType
 
 def test_convert_func_json_to_doc():
     """Tests the convert_func_json_to_doc."""
@@ -44,7 +34,8 @@ def test_convert_func_json_to_doc():
         ],
         "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec ipsum at lectus malesuada scelerisque. Curabitur euismod vestibulum hendrerit. Duis ultricies velit vel volutpat venenatis. Nulla suscipit magna et malesuada pulvinar. Curabitur semper sit amet lectus non suscipit. Curabitur justo ante, varius eget iaculis quis, laoreet vitae ipsum. Donec malesuada metus nec rutrum posuere. Quisque eget imperdiet est. ",
     }
-    response = prompts.convert_func_json_to_doc(doc_as_json)
+    response = docwriter.make(DocType.FUNCTION, doc_as_json)
+
     print(response)
     for line in response.split("\n"):
         if line:
@@ -66,7 +57,8 @@ def test_convert_class_json_to_doc():
                               "arg_type": "list",
                               "desc": "List of title options for a person."}],
                    "prefixed_spaces": 4}
-    response = prompts.convert_class_json_to_doc(doc_as_json)
+
+    response = docwriter.make(DocType.CLASS, doc_as_json)
     print(response)
     for line in response.split("\n"):
         if line:
