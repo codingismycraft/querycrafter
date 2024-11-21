@@ -9,7 +9,7 @@ _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 def load_secrets():
     """Load the secret environment variables."""
-    fullpath = os.path.join(_CURRENT_DIR, "..", ".env")
+    fullpath = os.path.join(_CURRENT_DIR, "..", "..",".env")
     if not os.path.isfile(fullpath):
         return
     with open(fullpath) as fin:
@@ -23,7 +23,7 @@ def load_secrets():
 
 def clear_secrets():
     """Removes the secrets environ values."""
-    fullpath = os.path.join(_CURRENT_DIR, "..", ".env")
+    fullpath = os.path.join(_CURRENT_DIR, "..", "..", ".env")
     if not os.path.isfile(fullpath):
         return
     with open(fullpath) as fin:
