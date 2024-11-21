@@ -30,7 +30,7 @@ class ModelManager:
         },
         {
             "provider": "ollama",
-            "model_name": "llama3:2",
+            "model_name": "llama3.2",
         },
         {
             "provider": "openai",
