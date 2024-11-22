@@ -22,7 +22,6 @@ def query_executor():
 
     Expected JSON format:
     {
-        "document_type": "CLASS",
         "text": "class Person: pass",
         "max_line_length": 120 (optional)
     }
@@ -33,6 +32,7 @@ def query_executor():
     """
     try:
         data = flask.request.json
+        data["document_type"] = common.get_doc_type(data.get("text"))
         doctype = DocType(data.get('document_type'))
         text = data.get('text')
         max_line_length = data.get("max_line_length")
