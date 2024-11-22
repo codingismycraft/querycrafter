@@ -24,6 +24,10 @@ def test_convert_func_json_to_doc():
                 "arg_name": "some_other",
                 "arg_type": "list",
                 "desc": "List of stock prices Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec ipsum at lectus malesuada scelerisque. Curabitur euismod vestibulum hendrerit.  Duis ultricies velit vel volutpat venenatis. Nulla suscipit magna et malesuada pulvinar. Curabitur semper sit amet lectus non suscipit. Curabitur justo ante, varius eget iaculis quis, laoreet vitae ipsum. Donec malesuada metus nec rutrum posuere.  Quisque eget imperdiet est."
+            },
+            {
+                "arg_name": "missing_type",
+                "desc": "Missing the type"
             }
         ],
         "return": {
@@ -37,6 +41,7 @@ def test_convert_func_json_to_doc():
         "notes": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec ipsum at lectus malesuada scelerisque. Curabitur euismod vestibulum hendrerit. Duis ultricies velit vel volutpat venenatis. Nulla suscipit magna et malesuada pulvinar. Curabitur semper sit amet lectus non suscipit. Curabitur justo ante, varius eget iaculis quis, laoreet vitae ipsum. Donec malesuada metus nec rutrum posuere. Quisque eget imperdiet est. ",
     }
     response = docwriter.make(DocType.FUNCTION, doc_as_json)
+    print(response)
     for line in response.split("\n"):
         if line:
             assert line.startswith(' ' * prefixed_spaces)

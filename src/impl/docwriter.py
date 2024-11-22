@@ -79,7 +79,10 @@ def _json_to_class_docstr(doc_as_json, max_line_length):
         arg_name = var_info.get("arg_name")
         arg_type = var_info.get("arg_type")
         desc = var_info.get("desc")
-        p = f":ivar {arg_type} {arg_name}: {desc}"
+        if arg_type:
+            p = f":ivar {arg_type} {arg_name}: {desc}"
+        else:
+            p = f":ivar {arg_name}: {desc}"
         if index > 0:
             lines.append('\n')
         lines.extend(linespliter.split_line(p, effective_length))
@@ -90,7 +93,10 @@ def _json_to_class_docstr(doc_as_json, max_line_length):
         arg_name = var_info.get("arg_name")
         arg_type = var_info.get("arg_type")
         desc = var_info.get("desc")
-        p = f":cvar {arg_type} {arg_name}: {desc}"
+        if arg_type:
+            p = f":cvar {arg_type} {arg_name}: {desc}"
+        else:
+            p = f":cvar {arg_name}: {desc}"
         lines.append('\n')
         lines.extend(linespliter.split_line(p, effective_length))
 
@@ -138,7 +144,10 @@ def _json_to_function_docstr(doc_as_json, max_line_length):
         arg_name = argument.get("arg_name")
         arg_type = argument.get("arg_type")
         desc = argument.get("desc")
-        p = f":param {arg_type} {arg_name}: {desc}"
+        if arg_type:
+            p = f":param {arg_type} {arg_name}: {desc}"
+        else:
+            p = f":param {arg_name}: {desc}"
         lines.extend(linespliter.split_line(p, effective_length))
         lines.append('\n')
 
