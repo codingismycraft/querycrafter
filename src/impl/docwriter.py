@@ -100,7 +100,11 @@ def _json_to_class_docstr(doc_as_json, max_line_length):
 
     docstr = ""
     for line in lines:
-        docstr += prefix + line.strip() + '\n'
+        line = line.strip()
+        if line:
+            docstr += prefix + line.strip() + '\n'
+        else:
+            docstr += '\n'
     return docstr
 
 
@@ -158,7 +162,12 @@ def _json_to_function_docstr(doc_as_json, max_line_length):
             lines.append(f":raises: {ex}")
     lines.append('"""')
     lines.append('\n')
+
     docstr = ""
     for line in lines:
-        docstr += prefix + line.strip() + '\n'
+        line = line.strip()
+        if line:
+            docstr += prefix + line.strip() + '\n'
+        else:
+            docstr += '\n'
     return docstr
