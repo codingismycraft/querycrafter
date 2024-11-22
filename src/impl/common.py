@@ -42,3 +42,27 @@ class DocType(enum.Enum):
 
     FUNCTION = "FUNCTION"
     CLASS = "CLASS"
+
+
+def get_doc_type(txt):
+    """Tries to guess the doc type of the passed in txt:
+
+    :return: The doctype enumerator.
+    :rtype: DocType
+
+    :raises: ValueError
+    """
+    for line in txt.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("def"):
+            return DocType.FUNCTION
+        elif line.startswith("class"):
+            return DocType.CLASS
+        raise ValueError
+
+
+
+
+
