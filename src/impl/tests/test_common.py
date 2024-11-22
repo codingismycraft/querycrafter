@@ -44,3 +44,23 @@ def test_invalid_element():
 
     with pytest.raises(ValueError):
         common.get_doc_type(txt)
+
+
+def test_get_prefix_spaces():
+    """Test getting the number of the predix spaces."""
+    txt = """
+
+    class Junk:
+        pass
+
+
+    """
+
+    retrieved = common.get_prefix_spaces(txt)
+    assert 4 == retrieved
+
+
+
+
+
+

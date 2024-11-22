@@ -2,10 +2,12 @@
 
 import json
 
-
 import querycrafter.src.impl.chatbot as chatbot
-import querycrafter.src.impl.prompt_maker as prompt_maker
+import querycrafter.src.impl.common as common
 import querycrafter.src.impl.docwriter as docwriter
+import querycrafter.src.impl.prompt_maker as prompt_maker
+
+DocType = common.DocType
 
 
 def make_docstring(doc_type, source_code, max_line_length=None):
@@ -18,9 +20,15 @@ def make_docstring(doc_type, source_code, max_line_length=None):
     :returns: The docstring for the passed in doctype and source code.
     :rtype: str
     """
+    prefix_spaces = common.get_prefix_spaces(source_code)
     prompt = prompt_maker.make_prompt(doc_type, source_code)
     llm_response = chatbot.run_query(prompt)
-    doc_as_json = json.loads(llm_response)
-    doc_as_txt = docwriter.make(doc_type, doc_as_json, max_line_length)
+    if doc_type == DocType.GENERIC:
+        return llm_response
+    else:
+        doc_as_json = json.loads(llm_response)
+        doc_as_txt = docwriter.make(
+                doc_type, doc_as_json, prefix_spaces, max_line_length
+        )
+        return doc_as_txt
 
-    return doc_as_txt

@@ -22,8 +22,16 @@ def make_prompt(doc_type, source_code):
         return _DOC_STRING_FOR_FUNCTION + source_code
     elif doc_type == common.DocType.CLASS:
         return _DOC_STRING_FOR_CLASS + source_code
+    elif doc_type == common.DocType.GENERIC:
+        return _DOC_STRING_FOR_GENERIC + source_code
+
     raise ValueError(f"DocType: {str(doc_type)} is not supported.")
 
+
+_DOC_STRING_FOR_GENERIC = """
+Complete this statement or answer the question:
+
+"""
 
 _DOC_STRING_FOR_CLASS = """
 You are a python programmer who is writting the docstring for a class.

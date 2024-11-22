@@ -42,6 +42,7 @@ class DocType(enum.Enum):
 
     FUNCTION = "FUNCTION"
     CLASS = "CLASS"
+    GENERIC = "GENERIC"
 
 
 def get_doc_type(txt):
@@ -60,9 +61,33 @@ def get_doc_type(txt):
             return DocType.FUNCTION
         elif line.startswith("class"):
             return DocType.CLASS
+        else:
+            return DocType.GENERIC
         raise ValueError
 
 
+def get_prefix_spaces(txt):
+    """Gets the number of prefix spaces needed for the doc str.
 
+    In the case that the passed in text is python code then in the
+    case of a function, method or a class we need to know how many spaces
+    consist the prefix of each line. This applies to cases where the function
+    of the class is not defined starting from the first character of the line
+    but instead it is indended (as happens in the case of a class method ).
 
+    :param str txt: The text that can contain a fuction, method or class.
 
+    :returns: The number of prefic spaces.
+    :rtype: int
+    """
+    for line in txt.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if stripped.startswith("def"):
+            return line.find("def")
+        elif stripped.startswith("class"):
+            return line.find("class")
+        else:
+            return 0
+        raise ValueError

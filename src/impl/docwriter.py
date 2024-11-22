@@ -19,12 +19,17 @@ MIN_LINE_LENGTH = 40
 MAX_LINE_LENGTH = 120
 
 
-def make(doc_type, doc_as_json, max_line_length=None):
+def make(doc_type, doc_as_json, extra_prefix=0, max_line_length=None):
     """Receives the doc string as a json and returns it as a string.
 
     :param DocType doc_type: The doctype to write the documenation for.
 
     :param dict doc_as_json: The componets of the docstr in json format.
+
+    :param int extra_prefix: The number of spaces to force in front of each
+    line for the dostr. This variable is applicable in the case the function
+    method or class that is documented is nested meaning it has some spaces in
+    front of the definition of def or class.
 
     :param int max_line_length: The maximum length for each line in the docstr;
     if None then the DEFAULT_MAX_LINE_LENGTH will be used.
@@ -38,13 +43,15 @@ def make(doc_type, doc_as_json, max_line_length=None):
     if max_line_length > MAX_LINE_LENGTH or max_line_length < MIN_LINE_LENGTH:
         raise ValueError(f"Invalid line length: {max_line_length}")
     if doc_type == DocType.FUNCTION:
-        return _json_to_function_docstr(doc_as_json, max_line_length)
+        return _json_to_function_docstr(
+            doc_as_json, extra_prefix, max_line_length)
     elif doc_type == DocType.CLASS:
-        return _json_to_class_docstr(doc_as_json, max_line_length)
+        return _json_to_class_docstr(
+            doc_as_json, extra_prefix, max_line_length)
     raise ValueError(f"Unsupported doc_type: {str(doc_type)}")
 
 
-def _json_to_class_docstr(doc_as_json, max_line_length):
+def _json_to_class_docstr(doc_as_json, extra_prefix, max_line_length):
     """Converts the passed in dict for the class to a doc string.
 
     Applies to class level docstr.
@@ -52,13 +59,20 @@ def _json_to_class_docstr(doc_as_json, max_line_length):
     :param dict doc_as_json: The class level documentation details passed
     as a dictionary.
 
+    :param int extra_prefix: The number of spaces to force in front of each
+    line for the dostr. This variable is applicable in the case the function
+    method or class that is documented is nested meaning it has some spaces in
+    front of the definition of def or class.
+
     :param int max_line_length: The maximum length for each line in the docstr;
 
     :returns: The doc string that correspods to the passed in dict.
     :rtype: str
     """
     prefixed_spaces = int(doc_as_json.get("prefixed_spaces", "0"))
-    prefix = " " * prefixed_spaces
+    prefixed_spaces += extra_prefix
+    prefix = " " * (prefixed_spaces)
+
     lines = [
         '"""' + doc_as_json.get("summary", "") + "\n"
     ]
@@ -114,11 +128,16 @@ def _json_to_class_docstr(doc_as_json, max_line_length):
     return docstr
 
 
-def _json_to_function_docstr(doc_as_json, max_line_length):
+def _json_to_function_docstr(doc_as_json, extra_prefix, max_line_length):
     """Converts the passed in dict to a doc string.
 
     :param dict doc_as_json: The documenation of a function (or method) passed
     as a dictionary.
+
+    :param int extra_prefix: The number of spaces to force in front of each
+    line for the dostr. This variable is applicable in the case the function
+    method or class that is documented is nested meaning it has some spaces in
+    front of the definition of def or class.
 
     :param int max_line_length: The maximum length for each line in the docstr;
 
@@ -126,6 +145,8 @@ def _json_to_function_docstr(doc_as_json, max_line_length):
     :rtype: str
     """
     prefixed_spaces = int(doc_as_json.get("prefixed_spaces", "0"))
+    prefixed_spaces += extra_prefix
+
     effective_length = max_line_length - prefixed_spaces
     prefix = " " * prefixed_spaces
     lines = [
