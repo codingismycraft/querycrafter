@@ -1,13 +1,18 @@
 """Query service specializing in coding."""
 
+import os
+import logging
+
 import flask
 
 import querycrafter.src.impl.common as common
 import querycrafter.src.impl.facade as facade
 
+
 app = flask.Flask(__name__)
 
 DocType = common.DocType
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 
 @app.route('/', methods=['POST'])
@@ -32,13 +37,16 @@ def query_executor():
     """
     try:
         data = flask.request.json
+        logging.info(str(data))
         data["document_type"] = common.get_doc_type(data.get("text"))
         doctype = DocType(data.get('document_type'))
         text = data.get('text')
         max_line_length = data.get("max_line_length")
         response = facade.make_docstring(doctype, text, max_line_length)
+        logging.info(str(response))
         return flask.Response(response, mimetype='text/plain')
     except Exception as e:
+        logging.exception(e)
         return f"An error occurred: {str(e)}", 400
 
 
