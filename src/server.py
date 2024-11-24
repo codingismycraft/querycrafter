@@ -7,6 +7,7 @@ import flask
 
 import querycrafter.src.impl.common as common
 import querycrafter.src.impl.facade as facade
+import querycrafter.src.impl.model_manager as model_manager
 
 
 app = flask.Flask(__name__)
@@ -52,4 +53,20 @@ def query_executor():
 
 if __name__ == '__main__':
     common.load_secrets()
-    app.run(port=common.LISTENING_PORT, host="0.0.0.0")
+
+    # Assign env settings (comming from the .env file).
+    listening_port = os.environ.get("INTERNAL_FRONT_END_PORT")
+    if not listening_port:
+        listening_port = common.DEFAULT_LISTENING_PORT
+
+    llm_model = os.environ.get("LLM_MODEL")
+    if llm_model:
+        model_manager.ModelManager.set_active_model(llm_model)
+
+    logging.info(
+            "Starting QueryCrafter in port: %s using model %s",
+            listening_port,
+            model_manager.ModelManager.get_model_name()
+    )
+
+    app.run(port=listening_port, host="0.0.0.0")

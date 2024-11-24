@@ -3,7 +3,7 @@
 import enum
 import os
 
-LISTENING_PORT = 15959
+DEFAULT_LISTENING_PORT = 15959
 
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
