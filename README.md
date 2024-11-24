@@ -4,30 +4,10 @@ QueryCrafter is a chat bot specializing mostly in  coding queries. Designed to
 assist developers serving as thin layer to any of the supported LLMs (like
 llama or gpt).
 
+# Create the env file
 
-# Running QueryCrafter using Docker
-
-Under any direcory create the following file and save it as
-`docker-compose.yaml`:
-
-```
-version: "3.8"
-
-services:
-  querycrafter:
-    image: jpazarzis/querycrafter:0.1
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - SERVICE_PORT=${INTERNAL_FRONT_END_PORT}
-      - LLM_MODEL=${LLM_MODEL}
-    ports:
-      - "${EXTERNAL_FRONT_END_PORT}:${INTERNAL_FRONT_END_PORT}"
-```
-
-The default port where the querycrafter is listening is `15959`
-
-Under the same directory create a file named `.env` with the following
-contents:
+Under the root directory (either where the docker compose exists or where the
+repo is cloned) create a file named `.env` with the following contents:
 
 ```
 OPENAI_API_KEY=<valid-open-ai-key>
@@ -53,6 +33,29 @@ llama3.2
 gpt-3.5-turbo
 gpt-4-turbo
 ```
+
+
+# Running QueryCrafter using Docker
+
+Under any direcory create the following file and save it as
+`docker-compose.yaml`:
+
+```
+version: "3.8"
+
+services:
+  querycrafter:
+    image: jpazarzis/querycrafter:0.1
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SERVICE_PORT=${INTERNAL_FRONT_END_PORT}
+      - LLM_MODEL=${LLM_MODEL}
+    ports:
+      - "${EXTERNAL_FRONT_END_PORT}:${INTERNAL_FRONT_END_PORT}"
+```
+
+The default port where the querycrafter is listening is `15959`
+
 
 Run the docker container using the following command:
 
