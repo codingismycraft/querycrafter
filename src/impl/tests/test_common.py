@@ -19,6 +19,19 @@ def test_getting_function():
     assert common.DocType.FUNCTION == retrieved
 
 
+def test_getting_async_function():
+    """Tests retrieving an async function."""
+    txt = """
+
+
+    async def foo(i, j):
+        return i * j
+
+    """
+
+    retrieved = common.get_doc_type(txt)
+    assert common.DocType.FUNCTION == retrieved
+
 def test_getting_class():
     """Tests retrieving a class."""
     txt = """

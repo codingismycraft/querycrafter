@@ -2,6 +2,7 @@
 
 import enum
 import os
+import re
 
 DEFAULT_LISTENING_PORT = 15959
 
@@ -64,10 +65,25 @@ def get_doc_type(txt):
             return DocType.FUNCTION
         elif line.startswith("class"):
             return DocType.CLASS
+        elif starts_with_async_def(line):
+            return DocType.FUNCTION
         else:
             return DocType.GENERIC
         raise ValueError
 
+
+def starts_with_async_def(line):
+    """
+    Checks if a line starts with 'async def', ignoring leading whitespace.
+
+    Args:
+        line (str): The line to check.
+
+    Returns:
+        bool: True if the line starts with 'async def', False otherwise.
+    """
+    pattern = r'^\s*async\s+def'
+    return bool(re.match(pattern, line))
 
 def get_prefix_spaces(txt):
     """Gets the number of prefix spaces needed for the doc str.
@@ -87,7 +103,9 @@ def get_prefix_spaces(txt):
         stripped = line.strip()
         if not stripped or stripped.startswith("#"):
             continue
-        if stripped.startswith("def"):
+        if starts_with_async_def(stripped):
+            return line.find("async")
+        elif stripped.startswith("def"):
             return line.find("def")
         elif stripped.startswith("class"):
             return line.find("class")
