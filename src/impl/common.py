@@ -5,6 +5,9 @@ import os
 
 DEFAULT_LISTENING_PORT = 15959
 
+# The default maximum line length.
+DEFAULT_MAX_LINE_LENGTH = 80
+
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
 

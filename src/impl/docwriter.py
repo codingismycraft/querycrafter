@@ -11,8 +11,6 @@ import querycrafter.src.impl.linespliter as linespliter
 
 DocType = common.DocType
 
-# The default maximum line length.
-DEFAULT_MAX_LINE_LENGTH = 80
 
 # Allowed doc string lengths.
 MIN_LINE_LENGTH = 40
@@ -39,7 +37,7 @@ def make(doc_type, doc_as_json, extra_prefix=0, max_line_length=None):
 
     :raise: ValueError
     """
-    max_line_length = max_line_length or DEFAULT_MAX_LINE_LENGTH
+    max_line_length = max_line_length or common.DEFAULT_MAX_LINE_LENGTH
     if max_line_length > MAX_LINE_LENGTH or max_line_length < MIN_LINE_LENGTH:
         raise ValueError(f"Invalid line length: {max_line_length}")
     if doc_type == DocType.FUNCTION:
