@@ -29,6 +29,18 @@ def inject_doc_str(source_code, docstr, linenum):
     return txt1
 
 
+def test_format_generic_response():
+    """Tests formating generic response."""
+    common.load_secrets()
+    txt = """
+Nam et pharetra sapien, et interdum sapien. Donec varius sodales fringilla. Nulla vulputate, leo non elementum tincidunt, dolor arcu molestie ante, vel lacinia risus lorem eget nisi. Praesent eu eros quis lacus ornare ullamcorper. Sed semper pulvinar purus, eu volutpat velit ullamcorper non. Suspendisse potenti. Vestibulum vulputate vestibulum augue, quis vestibulum velit malesuada non. Maecenas lobortis, dui a efficitur pharetra, purus erat cursus leo, id vestibulum velit nibh quis lacus. Phasellus pellentesque eget orci id vestibulum. Nunc ultricies massa at urna lacinia vulputate. Praesent laoreet eget lectus quis varius. Ut elit lectus, pellentesque et turpis mollis, sodales mattis sem. Ut et quam vel elit pellentesque egestas. In eget imperdiet dui, nec euismod fe
+    """
+    retrieved = facade.make_docstring(DocType.GENERIC, txt)
+    print("")
+    print(retrieved)
+    common.clear_secrets()
+
+
 def test_make_docstring_for_function():
     """Tests the make docstring for a function."""
     common.load_secrets()

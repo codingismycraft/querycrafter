@@ -41,9 +41,8 @@ def test_invalid_element():
     x
 
     """
-
-    with pytest.raises(ValueError):
-        common.get_doc_type(txt)
+    retrieved = common.get_doc_type(txt)
+    assert retrieved == common.DocType.GENERIC
 
 
 def test_get_prefix_spaces():
@@ -58,9 +57,3 @@ def test_get_prefix_spaces():
 
     retrieved = common.get_prefix_spaces(txt)
     assert 4 == retrieved
-
-
-
-
-
-

@@ -45,7 +45,7 @@ def test_convert_func_json_to_doc():
     for line in response.split("\n"):
         if line:
             assert line.startswith(' ' * prefixed_spaces)
-            assert len(line) < docwriter.DEFAULT_MAX_LINE_LENGTH
+            assert len(line) < common.DEFAULT_MAX_LINE_LENGTH
 
 
 def test_convert_class_json_to_doc():
@@ -68,4 +68,4 @@ def test_convert_class_json_to_doc():
     for line in response.split("\n"):
         if line:
             assert line.startswith(' ' * prefixed_spaces)
-            assert len(line) < docwriter.DEFAULT_MAX_LINE_LENGTH
+            assert len(line) < common.DEFAULT_MAX_LINE_LENGTH
