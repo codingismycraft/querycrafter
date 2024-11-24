@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SERVICE_PORT=${INTERNAL_FRONT_END_PORT}
+      - LLM_MODEL=${LLM_MODEL}
+    ports:
+      - "${EXTERNAL_FRONT_END_PORT}:${INTERNAL_FRONT_END_PORT}"
