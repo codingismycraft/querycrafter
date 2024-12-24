@@ -14,7 +14,7 @@ class ModelManager:
     """
 
     DEFAULT_PROVIDER = "openai"
-    DEFAULT_MODEL_NAME = "gpt-4-turbo"
+    DEFAULT_MODEL_NAME = "o1"
 
     _provider = DEFAULT_PROVIDER
     _model_name = DEFAULT_MODEL_NAME
