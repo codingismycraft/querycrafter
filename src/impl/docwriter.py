@@ -147,8 +147,12 @@ def _json_to_function_docstr(doc_as_json, extra_prefix, max_line_length):
 
     effective_length = max_line_length - prefixed_spaces
     prefix = " " * prefixed_spaces
+    summary = doc_as_json.get("summary", "").rstrip()
+    if not summary.endswith("."):
+        summary += '.'
+
     lines = [
-        '"""' + doc_as_json.get("summary", ""),
+        '"""' + summary,
         "\n"
     ]
 
@@ -167,6 +171,8 @@ def _json_to_function_docstr(doc_as_json, extra_prefix, max_line_length):
             p = f":param {arg_type} {arg_name}: {desc}"
         else:
             p = f":param {arg_name}: {desc}"
+        if not p.endswith("."):
+            p += "."
         lines.extend(linespliter.split_line(p, effective_length))
         lines.append('\n')
 
@@ -180,6 +186,8 @@ def _json_to_function_docstr(doc_as_json, extra_prefix, max_line_length):
 
             return_type = return_info.get("return_type")
             if return_type:
+                if not return_type.endswith("."):
+                    return_type += "."
                 lines.append(f":rtype: {return_type}")
 
     exceptions = doc_as_json.get("exceptions")
@@ -190,6 +198,15 @@ def _json_to_function_docstr(doc_as_json, extra_prefix, max_line_length):
             lines.append(f":raises: {ex}")
     lines.append('"""')
     lines.append('\n')
+
+    # Special case: There is only the first line of the documentation
+    # witout arguments, notes, returns, or exceptions..
+
+    if len(lines) == 4:
+        lines = [
+            lines[0] + '"""',
+            '\n'
+        ]
 
     docstr = ""
     for line in lines:

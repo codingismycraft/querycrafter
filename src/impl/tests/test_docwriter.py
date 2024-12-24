@@ -8,6 +8,29 @@ import querycrafter.src.impl.docwriter as docwriter
 
 DocType = common.DocType
 
+def test_docstring_ending_with_period():
+    """Tests that docstrings ending with period."""
+    prefixed_spaces = 4
+    doc_as_json = {
+        "summary": "Calculate the maximum profit",
+        "prefixed_spaces": prefixed_spaces
+    }
+    retrieved = docwriter.make(DocType.FUNCTION, doc_as_json)
+    expected = '    """Calculate the maximum profit."""\n\n'
+    assert retrieved == expected
+
+
+def test_doc_single_line():
+    """Tests a doc string consisting of only one line."""
+    prefixed_spaces = 4
+    doc_as_json = {
+        "summary": "Calculate the maximum profit.",
+        "prefixed_spaces": prefixed_spaces
+    }
+    retrieved = docwriter.make(DocType.FUNCTION, doc_as_json)
+    expected = '    """Calculate the maximum profit."""\n\n'
+    assert retrieved == expected
+
 
 def test_convert_func_json_to_doc():
     """Tests the convert_func_json_to_doc."""
