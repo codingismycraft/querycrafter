@@ -118,7 +118,14 @@ or a method.
 The user is going to pass to you a function (or a class method) and you
 must return a json document with the following structure keeping in mind
 that:
-    - if the return value is going to be None then the return key is omitted.
+
+    - If the type of a passed in parameter cannot be decided then you
+    should omit it and do not try to make it up meaning you should just
+    say something like :param x: This is doing this.
+
+    - if the return value is going to be None or unknown then
+    the return key is omitted.  The returns comment must always end with
+    a period.
 
     - if no exceptions are raised than no 'exceptions' key must be omitted.
 
