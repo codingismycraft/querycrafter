@@ -45,7 +45,7 @@ version: "3.8"
 
 services:
   querycrafter:
-    image: jpazarzis/querycrafter:0.1
+    image: jpazarzis/querycrafter:0.2
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - SERVICE_PORT=${INTERNAL_FRONT_END_PORT}
