@@ -114,3 +114,23 @@ curl --location 'http://localhost:15959/' \
 
 See for more examples under the tests directory.
 
+# Running as a linux service
+You can create the following service and manage it as a systemctl service.
+
+File: `/etc/systemd/system/querycrafter.service`
+
+```
+[Unit]
+Description=QueryCrafter: Http Service using AI to assist with python.
+After=docker.service
+Requires=docker.service
+
+[Service]
+User=john
+Type=simple
+ExecStart=/bin/bash -c "docker compose -f /<installation-dir>/querycrafter/docker-compose.yaml  up"
+ExecStop=/bin/bash -c "docker compose  -f /<installation-dir>/querycrafter/docker-compose.yaml  stop"
+
+[Install]
+WantedBy=multi-user.target
+```
